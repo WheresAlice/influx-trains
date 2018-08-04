@@ -1,0 +1,35 @@
+version: '3'
+services:
+  influxdb:
+    image: influxdb
+    volumes:
+    - influxdb_data:/var/lib/influxdb
+    environment:
+      INFLUXDB_DB: trains
+
+  grafana:
+    build: ./grafana
+    image: kaerast/grafana
+    links:
+      - influxdb
+    ports:
+    - "3000:3000"
+    depends_on:
+    - influxdb
+
+#  rtt_loader:
+#    build:
+#      context: .
+#      dockerfile: Dockerfile
+#    image: kaerast/rtt_loader
+#    depends_on:
+#    - influxdb
+#    links:
+#    - influxdb
+#    env_file:
+#      - ./.env
+#    volumes:
+#    - ./lds-data/data:/data
+
+volumes:
+  influxdb_data: {}
